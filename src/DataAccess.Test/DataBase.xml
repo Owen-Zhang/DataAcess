@@ -1,0 +1,10 @@
+﻿<CommandFile>
+  <DataBaseList>
+    <DataBase Name="A1DataBase" Type="SQL">
+      <ConnectionString>此处写数据库的连接字符串(还可以使用加密后的字符串，加载到内在中去统一解析)</ConnectionString>
+    </DataBase>
+    <DataBase Name="A2DataBase" Type="SQL">
+      <ConnectionString>此处写数据库的连接字符串(还可以使用加密后的字符串，加载到内在中去统一解析)</ConnectionString>
+    </DataBase>
+  </DataBaseList>
+</CommandFile>

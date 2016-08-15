@@ -34,6 +34,7 @@
       <HintPath>..\packages\ServiceStackText.3.8.3.1\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,10 @@
   <ItemGroup>
     <Compile Include="Common\UtilTool.cs" />
     <Compile Include="Config\CommandFile.cs" />
+    <Compile Include="Config\DataAccessConfig.cs" />
+    <Compile Include="Config\DataAccessSection.cs" />
+    <Compile Include="Config\DataBaseInfo.cs" />
+    <Compile Include="Config\SqlFIleListInfo.cs" />
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

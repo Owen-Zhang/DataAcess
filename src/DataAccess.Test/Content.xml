@@ -21,7 +21,7 @@
       ]]>
       </CommandText>
       <Parameters>
-        <Param Name="@ID2" DbType="StringFixedLength" />
+        <Param Name="@ID2" DbType="StringFixedLength" Size="15" />
       </Parameters>
     </Command>
 

@@ -1,0 +1,7 @@
+﻿<CommandFile>
+  <SqlFileList>
+    <File Name="Test01.xml" />
+    <File Name="Test03.xml" />
+    <File Name="Test02.xml" />
+  </SqlFileList>
+</CommandFile>
