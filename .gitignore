@@ -1,1 +1,9 @@
 bin
+*.nupkg
+bin/
+obj/
+*.dll
+*.pdb
+*.cache
+*.txt
+*.suo

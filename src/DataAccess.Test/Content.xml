@@ -1,0 +1,29 @@
+﻿<CommandFile>
+  <CommandList>
+    <Command Name="GetCustomerByCustomerID" DataBase="Northwind1" CommandType="Text">
+      <CommandText>
+        <![CDATA[
+        select * 
+        from dbo.Customers with(nolock)
+        where CustomerID = @ID
+      ]]>
+      </CommandText>
+      <Parameters>
+        <Parameter Name="@ID" DbType="StringFixedLength" Direction="Input"/>
+      </Parameters>
+    </Command>
+    <Command Name="GetCustomerByCustomerID2" DataBase="Northwind2">
+      <CommandText>
+        <![CDATA[
+        select * 
+        from dbo.Customers with(nolock)
+        where CustomerID = @ID
+      ]]>
+      </CommandText>
+      <Parameters>
+        <Param Name="@ID2" DbType="StringFixedLength" />
+      </Parameters>
+    </Command>
+
+  </CommandList>
+</CommandFile>
