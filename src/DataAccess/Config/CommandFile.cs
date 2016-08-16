@@ -68,7 +68,6 @@ namespace DataAccess.Config
 
     public class Parameter
     {
-        private int size = -1;
         private ParameterDirection direction = ParameterDirection.Input;
 
         [XmlAttribute("Name")]
@@ -91,15 +90,7 @@ namespace DataAccess.Config
         }
 
         [XmlAttribute("Size")]
-        public int Size
-        {
-            get {
-                return size;
-            }
-            set {
-                size = value;
-            }
-        }
+        public int? Size { get; set; }
     }
 }
 

@@ -52,12 +52,16 @@
     <Compile Include="Config\DataAccessSection.cs" />
     <Compile Include="Config\DataBaseInfo.cs" />
     <Compile Include="Config\SqlFIleListInfo.cs" />
+    <Compile Include="Main\DataCommand.cs" />
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Main\TestDapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interface\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

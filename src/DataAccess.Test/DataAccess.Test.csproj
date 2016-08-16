@@ -43,8 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content.xml" />
-    <Content Include="DbCommandFiles.xml" />
-    <Content Include="DataBase.xml" />
+    <Content Include="DbCommandFiles.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataBase.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
