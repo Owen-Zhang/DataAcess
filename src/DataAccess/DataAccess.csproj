@@ -57,6 +57,7 @@
     <Compile Include="Main\DataCommand.cs" />
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Main\TestDapper.cs" />
+    <Compile Include="Extenssion\MultipleReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
