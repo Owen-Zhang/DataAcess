@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace DataAccess.Config
 {
@@ -19,5 +20,20 @@ namespace DataAccess.Config
                 return this["DataBaseFilePath"] as string;
             }
         }
+
+        public ExceptionLevel ExceptionLevel {
+            get
+            {
+                ExceptionLevel temp;
+                if (Enum.TryParse(this["ExceptionLevel"] as string, out temp))
+                    return temp;
+                else return ExceptionLevel.Full;
+            }
+        }
+    }
+
+    public enum ExceptionLevel {
+        Full,
+        Safety
     }
 }

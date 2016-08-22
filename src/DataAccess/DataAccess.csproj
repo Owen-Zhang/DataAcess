@@ -46,12 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DataAccessException.cs" />
     <Compile Include="Common\UtilTool.cs" />
     <Compile Include="Config\CommandFile.cs" />
     <Compile Include="Config\DataAccessConfig.cs" />
     <Compile Include="Config\DataAccessSection.cs" />
     <Compile Include="Config\DataBaseInfo.cs" />
     <Compile Include="Config\SqlFIleListInfo.cs" />
+    <Compile Include="Main\DapperHelper.cs" />
     <Compile Include="Main\DataCommand.cs" />
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Main\TestDapper.cs" />

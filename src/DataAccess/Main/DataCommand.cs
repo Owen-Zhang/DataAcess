@@ -26,8 +26,13 @@ namespace DataAccess.Main
         {
             commandConfig = config;
             configParemeterList = GetParametersFromConfig();
+            dapperParameters = new DynamicParameters();
+            AddReturnOrOutPutParameter();
         }
 
+        /// <summary>
+        /// 设置参数
+        /// </summary>
         public void SetParameterValue(string parameterName, object value)
         {
             parameterName = CheckAndAddPre(parameterName);
@@ -37,6 +42,8 @@ namespace DataAccess.Main
             if (configTemp != null)
                 dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
         }
+
+        public 
 
         private List<Parameter> GetParametersFromConfig()
         {
@@ -57,6 +64,17 @@ namespace DataAccess.Main
             if (!paramName.StartsWith("@"))
                 paramName = string.Format("@{0}", paramName);
             return paramName;
+        }
+
+        /// <summary>
+        /// 将输出参数和返回参数加到参数列表中
+        /// </summary>
+        private void AddReturnOrOutPutParameter()
+        {
+            configParemeterList.FindAll(item =>
+                item.Direction == System.Data.ParameterDirection.Output ||
+                item.Direction == System.Data.ParameterDirection.ReturnValue)
+            .ForEach(temp => dapperParameters.Add(temp.Name, null, temp.DbType, temp.Direction, temp.Size));
         }
     }
 }
