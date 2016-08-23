@@ -95,12 +95,12 @@ namespace DataAccess.Main
         }
 
         /// <summary>
-        /// 多个返回实体
+        /// 多个返回实体, 这个方法没有关闭connection, 需要手动关闭connection
         /// </summary>
         public static Dapper.SqlMapper.GridReader QueryMultiple<T>(IDbConnection connection, CommandType cmdType, string sqlText, int timeout, dynamic parameters)
         { 
             connection.Open();
-            SqlMapper.QueryMultiple(connection, sqlText, parameters, commandTimeout: timeout, commandType: cmdType);
+            return SqlMapper.QueryMultiple(connection, sqlText, parameters, commandTimeout: timeout, commandType: cmdType);
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Linq;
 using DataAccess.Config;
 using System.Collections.Generic;
+using System.Data;
+using DataAccess.Common;
 
 namespace DataAccess.Main
 {
@@ -10,6 +12,11 @@ namespace DataAccess.Main
     /// </summary>
     public class DataCommand
     {
+        /// <summary>
+        /// 由于QueryMultiple时，没有关闭connection, 在后面手动去关闭 
+        /// </summary>
+        private IDbConnection connection;
+
         /// <summary>
         /// sql文件中所配制的一个节点数据
         /// </summary>
@@ -43,7 +50,27 @@ namespace DataAccess.Main
                 dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
         }
 
-        public 
+        public int ExecuteNonQuery()
+        {
+            return 0;
+            //return DapperHelper.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// 关闭connection, 只在调用QueryMultiple方法时用
+        /// </summary>
+        public void CloseConnection()
+        {
+            if (connection != null)
+                connection.Close();
+        }
+
+        public IDbConnection GetConnection()
+        {
+            commandConfig.DataBaseStr
+            //string baseName, string dbProvider
+            return ConnectionFactory.GetConnection("", "");
+        }
 
         private List<Parameter> GetParametersFromConfig()
         {
