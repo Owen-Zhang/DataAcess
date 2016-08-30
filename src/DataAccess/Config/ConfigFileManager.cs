@@ -36,6 +36,9 @@ namespace DataAccess.Config
                  string.Equals(item.SqlName, sqlName, StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// loadDataBaseInfo and Sql in host start
+        /// </summary>
         public static void LoadDataAccessFile()
         {
             LoadDataBaseInfo();
@@ -51,6 +54,7 @@ namespace DataAccess.Config
             if (string.IsNullOrWhiteSpace(baseFilePath))
                 throw new Exception("please config DataBase FilePath");
 
+            baseFilePath = UtilTool.GetFilePath(baseFilePath);
             var fileContent = File.ReadAllText(baseFilePath);
             if (string.IsNullOrWhiteSpace(fileContent))
                 throw new Exception("please config DataBase File Content");
@@ -67,16 +71,20 @@ namespace DataAccess.Config
             if (string.IsNullOrWhiteSpace(sqlCommandPath))
                 throw new Exception("please config sqlCommand FilePath");
 
+            sqlCommandPath = UtilTool.GetFilePath(sqlCommandPath);
             var fileContent = File.ReadAllText(sqlCommandPath);
+
             if (string.IsNullOrWhiteSpace(fileContent))
                 throw new Exception("DbCommandFiles is Empty");
 
             var sqlFile = UtilTool.XmlDeserialize<SqlFIleListInfo>(fileContent);
-
             sqlCommandList  = new List<CommandContent>();
+
             foreach (var item in sqlFile.SqlFileList)
             {
-                fileContent = File.ReadAllText(item.Name);
+                if (string.IsNullOrWhiteSpace(item.Name)) continue;
+
+                fileContent = File.ReadAllText(UtilTool.GetFilePath(item.Name));
                 if (string.IsNullOrWhiteSpace(fileContent))
                     continue;
 

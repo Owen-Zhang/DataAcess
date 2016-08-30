@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 namespace DataAccess.Common
 {
@@ -40,6 +41,19 @@ namespace DataAccess.Common
 
             return
                 ServiceStack.Text.JsonSerializer.SerializeToString(model);
+        }
+
+        /// <summary>
+        /// if relative path return full Path
+        /// </summary>
+        public static string GetFilePath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return string.Empty;
+
+            string root = Path.GetPathRoot(path);
+            if (string.IsNullOrWhiteSpace(root))
+                return Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, path);
+            return path;
         }
     }
 }
