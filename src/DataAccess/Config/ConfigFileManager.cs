@@ -27,7 +27,7 @@ namespace DataAccess.Config
         /// <summary>
         /// sql 语句信息 
         /// </summary>
-        public static CommandContent GetDataBaseInfo(string sqlName)
+        public static CommandContent GetSqlContentInfo(string sqlName)
         {
             if (sqlCommandList == null)
                 LoadCommandSqlInfo();

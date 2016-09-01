@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using DataAccess.Common;
 
 namespace DataAccess.Config
 {
@@ -16,7 +17,7 @@ namespace DataAccess.Config
         public string Name { get; set; }
 
         [XmlAttribute("Type")]
-        public string Type { get; set; }
+        public DbProvider Type { get; set; }
 
         public string ConnectionString { get; set;}
     }

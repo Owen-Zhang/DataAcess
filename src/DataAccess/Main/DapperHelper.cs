@@ -3,6 +3,7 @@ using Dapper;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using DataAccess.Common;
 
 namespace DataAccess.Main
 {
@@ -97,10 +98,18 @@ namespace DataAccess.Main
         /// <summary>
         /// 多个返回实体, 这个方法没有关闭connection, 需要手动关闭connection
         /// </summary>
-        public static Dapper.SqlMapper.GridReader QueryMultiple<T>(IDbConnection connection, CommandType cmdType, string sqlText, int timeout, dynamic parameters)
+        public static Dapper.SqlMapper.GridReader QueryMultiple(IDbConnection connection, CommandType cmdType, string sqlText, int timeout, dynamic parameters)
         { 
             connection.Open();
             return SqlMapper.QueryMultiple(connection, sqlText, parameters, commandTimeout: timeout, commandType: cmdType);
+        }
+
+        /// <summary>
+        /// 获取数据库的connection
+        /// </summary>
+        private static IDbConnection GetConnection(string connectionStr, DbProvider provider)
+        {
+            return ConnectionFactory.GetConnection(connectionStr, provider);
         }
     }
 }

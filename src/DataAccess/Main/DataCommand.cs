@@ -4,6 +4,8 @@ using DataAccess.Config;
 using System.Collections.Generic;
 using System.Data;
 using DataAccess.Common;
+using DataAccess.Model;
+using System;
 
 namespace DataAccess.Main
 {
@@ -17,23 +19,13 @@ namespace DataAccess.Main
         /// </summary>
         private IDbConnection connection;
 
-        /// <summary>
-        /// sql文件中所配制的一个节点数据
-        /// </summary>
-        private CommandContent commandConfig;
-
-        /// <summary>
-        /// sql文件中生成的参数集合
-        /// </summary>
         private List<Parameter> configParemeterList;
-
-        private DynamicParameters dapperParameters;
+        private SqlConfigConent sqlConfigConent;
 
         internal DataCommand(CommandContent config)
         {
-            commandConfig = config;
-            configParemeterList = GetParametersFromConfig();
-            dapperParameters = new DynamicParameters();
+            sqlConfigConent = new SqlConfigConent() { dapperParameters = new DynamicParameters() };
+            configParemeterList = GetParametersFromConfig(config);
             AddReturnOrOutPutParameter();
         }
 
@@ -47,13 +39,47 @@ namespace DataAccess.Main
                 string.Equals(item.Name, parameterName, System.StringComparison.OrdinalIgnoreCase));
 
             if (configTemp != null)
-                dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
+                sqlConfigConent.dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
         }
 
+        /// <summary>
+        /// not return sqlDate, return effect rows 
+        /// </summary>
         public int ExecuteNonQuery()
         {
-            return 0;
-            //return DapperHelper.ExecuteNonQuery();
+            return DapperHelper.ExecuteNonQuery(sqlConfigConent);
+        }
+
+        /// <summary>
+        /// 返回单个值
+        /// </summary>
+        public T ExecuteScalar<T>()
+        {
+            return DapperHelper.ExecuteScalar<T>(sqlConfigConent);
+        }
+
+        /// <summary>
+        /// 返回单个实体数据
+        /// </summary>
+        public T Query<T>()
+        {
+            return DapperHelper.Query<T>(sqlConfigConent);
+        }
+
+        /// <summary>
+        /// 返回集合数据
+        /// </summary>
+        public List<T> QueryList<T>()
+        {
+            return DapperHelper.QueryList<T>(sqlConfigConent);
+        }
+
+        /// <summary>
+        /// 一次返回多个数据集，如(select * from a, select * from B.....)
+        /// </summary>
+        public Dapper.SqlMapper.GridReader QueryMultiple()
+        {
+            return DapperHelper.QueryMultiple(sqlConfigConent);
         }
 
         /// <summary>
@@ -65,15 +91,28 @@ namespace DataAccess.Main
                 connection.Close();
         }
 
-        public IDbConnection GetConnection()
+        /// <summary>
+        /// 将输出参数和返回参数加到参数列表中
+        /// </summary>
+        private void AddReturnOrOutPutParameter()
         {
-            commandConfig.DataBaseStr
-            //string baseName, string dbProvider
-            return ConnectionFactory.GetConnection("", "");
+            configParemeterList.FindAll(item =>
+                item.Direction == System.Data.ParameterDirection.Output ||
+                item.Direction == System.Data.ParameterDirection.ReturnValue)
+            .ForEach(temp => sqlConfigConent.dapperParameters.Add(temp.Name, null, temp.DbType, temp.Direction, temp.Size));
         }
 
-        private List<Parameter> GetParametersFromConfig()
+        private List<Parameter> GetParametersFromConfig(CommandContent commandConfig)
         {
+            sqlConfigConent.CmdType = commandConfig.CommandType;
+            sqlConfigConent.SqlText = commandConfig.CommandText;
+            sqlConfigConent.Timeout = commandConfig.TimeOut;
+
+            string connectionStr; DbProvider dbProvider;
+            GetDataBaseInfo(commandConfig.DataBaseStr, out connectionStr, out dbProvider);
+            sqlConfigConent.ConnectionStr = connectionStr;
+            sqlConfigConent.DbProvider = dbProvider;
+
             if (commandConfig.Parameters == null || commandConfig.Parameters.Count == 0)
                 return new List<Parameter>();
 
@@ -94,14 +133,17 @@ namespace DataAccess.Main
         }
 
         /// <summary>
-        /// 将输出参数和返回参数加到参数列表中
+        /// dataBaseName, sql文件中设置的数据库(此处只是一个映射名),
         /// </summary>
-        private void AddReturnOrOutPutParameter()
+        /// <param name="dataBaseName"></param>
+        public void GetDataBaseInfo(string dataBaseName, out string connectionStr, out DbProvider dbProvider)
         {
-            configParemeterList.FindAll(item =>
-                item.Direction == System.Data.ParameterDirection.Output ||
-                item.Direction == System.Data.ParameterDirection.ReturnValue)
-            .ForEach(temp => dapperParameters.Add(temp.Name, null, temp.DbType, temp.Direction, temp.Size));
+            var dataBase = ConfigFileManager.GetDataBaseInfo(dataBaseName);
+            if (dataBase == null)
+                throw new Exception(string.Format("please config [{0}] dataBase ConnectionString ", dataBaseName));
+
+            connectionStr = dataBase.ConnectionString;
+            dbProvider = dataBase.Type;
         }
     }
 }
