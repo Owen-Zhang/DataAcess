@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CommonEnum.cs" />
     <Compile Include="Common\ConnectionFactory.cs" />
     <Compile Include="Common\DataAccessException.cs" />
     <Compile Include="Common\UtilTool.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Main\TestDapper.cs" />
     <Compile Include="Extenssion\MultipleReader.cs" />
+    <Compile Include="Model\SqlConfigConent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
