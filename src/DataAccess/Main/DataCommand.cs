@@ -43,6 +43,14 @@ namespace DataAccess.Main
         }
 
         /// <summary>
+        /// 动态替换sql文本中的一些字符，如order by 字段名
+        /// </summary>
+        public void ReplaceSqlText(string oldString, string newString)
+        {
+            sqlConfigConent.SqlText = sqlConfigConent.SqlText.Replace(oldString, newString);
+        }
+
+        /// <summary>
         /// not return sqlDate, return effect rows 
         /// </summary>
         public int ExecuteNonQuery()

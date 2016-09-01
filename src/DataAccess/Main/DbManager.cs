@@ -1,23 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.Config;
+using System.Collections.Generic;
 
 namespace DataAccess.Main
 {
+    /// <summary>
+    /// 1： 异常处理
+    /// 2： 处理日志
+    /// 3:  IDbConnection对象缓存
+    /// </summary>
     public class DbManager
     {
         /// <summary>
-        /// 加载所有的sql.xml文件
+        /// 加载数据访问层的相关配制(最好放在主程序启动里)
         /// </summary>
-        private static List<string> LoadSqlFile(string dbCommandFile)
+        public static void LoadDataAccessConfig()
         {
-            return new List<string>();   
+            ConfigFileManager.LoadDataAccessFile();
         }
 
         /// <summary>
-        /// 将sql文件中的内容反序列化并组装相应的数据
+        /// 获取一个运行时的Command
         /// </summary>
-        private  static void GenerateSqlContent(List<string> fileNameList)
+        public static DataCommand GetDataCommand(string sqlNodeName)
         {
-            
+            return new DataCommand(ConfigFileManager.GetSqlContentInfo(sqlNodeName));
         }
     }
 }
