@@ -8,17 +8,14 @@ namespace DataAccess.Config
 {
     public class ConfigFileManager
     {
-        private static DataBaseInfo dataBaseInfo = null;
-        private static List<CommandContent> sqlCommandList = null;
+        private static DataBaseInfo dataBaseInfo = new DataBaseInfo { DataBaseList = new List<DataBase>() };
+        private static Dictionary<string, CommandContent> sqlCommandDic = new Dictionary<string, CommandContent>(500);
 
         /// <summary>
         /// 数据库连接相关的信息，connectionstring, Provider等
         /// </summary>
         public static DataBase GetDataBaseInfo(string baseName)
         {
-            if (dataBaseInfo == null)
-                LoadDataBaseInfo();
-            
             return
             dataBaseInfo.DataBaseList.FirstOrDefault(
                 item => string.Equals(item.Name, baseName, StringComparison.OrdinalIgnoreCase));
@@ -29,11 +26,9 @@ namespace DataAccess.Config
         /// </summary>
         public static CommandContent GetSqlContentInfo(string sqlName)
         {
-            if (sqlCommandList == null)
-                LoadCommandSqlInfo();
-
-            return sqlCommandList.FirstOrDefault(item =>
-                 string.Equals(item.SqlName, sqlName, StringComparison.OrdinalIgnoreCase));
+            CommandContent content;
+            sqlCommandDic.TryGetValue(sqlName, out content);
+            return content;
         }
 
         /// <summary>
@@ -52,14 +47,28 @@ namespace DataAccess.Config
         {
             var baseFilePath = DataAccessConfig.DataBaseFilePath;
             if (string.IsNullOrWhiteSpace(baseFilePath))
-                throw new Exception("please config DataBase FilePath");
+            {
+                LogManager.Log.Error("please config DataBase FilePath");
+                return;
+            }
 
             baseFilePath = UtilTool.GetFilePath(baseFilePath);
             var fileContent = File.ReadAllText(baseFilePath);
-            if (string.IsNullOrWhiteSpace(fileContent))
-                throw new Exception("please config DataBase File Content");
+            if (string.IsNullOrWhiteSpace(fileContent)) 
+            {
+                LogManager.Log.Error("please config DataBase File Content");
+                return;
+            }
 
-            dataBaseInfo = UtilTool.XmlDeserialize<DataBaseInfo>(fileContent);
+            try
+            {
+                dataBaseInfo = UtilTool.XmlDeserialize<DataBaseInfo>(fileContent);
+            }
+            catch
+            {
+                LogManager.Log.Error("DataBase File content Deserialize failed");
+                return;
+            }
         }
 
         /// <summary>
@@ -69,16 +78,28 @@ namespace DataAccess.Config
         {
             var sqlCommandPath = DataAccessConfig.DbCommandFilePath;
             if (string.IsNullOrWhiteSpace(sqlCommandPath))
-                throw new Exception("please config sqlCommand FilePath");
+            {
+                LogManager.Log.Error("please config sqlCommand FilePath");
+                return;
+            }
 
             sqlCommandPath = UtilTool.GetFilePath(sqlCommandPath);
             var fileContent = File.ReadAllText(sqlCommandPath);
-
             if (string.IsNullOrWhiteSpace(fileContent))
-                throw new Exception("DbCommandFiles is Empty");
+            {
+                LogManager.Log.Error("DbCommandFiles is Empty");
+                return;
+            }
 
-            var sqlFile = UtilTool.XmlDeserialize<SqlFIleListInfo>(fileContent);
-            sqlCommandList  = new List<CommandContent>();
+            SqlFIleListInfo sqlFile = null;
+            try
+            {
+                sqlFile = UtilTool.XmlDeserialize<SqlFIleListInfo>(fileContent);
+            }
+            catch {
+                LogManager.Log.Error("DbCommandFiles Deserialize faild");
+                return;
+            }
 
             foreach (var item in sqlFile.SqlFileList)
             {
@@ -88,8 +109,19 @@ namespace DataAccess.Config
                 if (string.IsNullOrWhiteSpace(fileContent))
                     continue;
 
-                sqlCommandList.AddRange(UtilTool.XmlDeserialize<CommandFile>(fileContent).CommandList);
+                var commandList = new List<CommandContent>();
+                try
+                {
+                    commandList.AddRange(UtilTool.XmlDeserialize<CommandFile>(fileContent).CommandList);
+                }
+                catch
+                {
+                    LogManager.Log.ErrorFormat("sqlFile Deserialize faild, fileName is : {0}", item.Name);
+                }
+
+                commandList.ForEach(command => sqlCommandDic.Add(command.SqlName, command));
             }
         }
+
     }
 }
