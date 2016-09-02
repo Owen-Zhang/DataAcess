@@ -119,7 +119,7 @@ namespace DataAccess.Config
                     LogManager.Log.ErrorFormat("sqlFile Deserialize faild, fileName is : {0}", item.Name);
                 }
 
-                commandList.ForEach(command => sqlCommandDic.Add(command.SqlName, command));
+                commandList.ForEach(command => sqlCommandDic[command.SqlName] = command);
             }
         }
 

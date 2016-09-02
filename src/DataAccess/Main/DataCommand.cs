@@ -143,7 +143,6 @@ namespace DataAccess.Main
         /// <summary>
         /// dataBaseName, sql文件中设置的数据库(此处只是一个映射名),
         /// </summary>
-        /// <param name="dataBaseName"></param>
         public void GetDataBaseInfo(string dataBaseName, out string connectionStr, out DbProvider dbProvider)
         {
             var dataBase = ConfigFileManager.GetDataBaseInfo(dataBaseName);
