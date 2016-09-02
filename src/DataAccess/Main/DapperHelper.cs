@@ -16,20 +16,20 @@ namespace DataAccess.Main
         /// <summary>
         /// 不需要有返回值
         /// </summary>
-        public static int ExecuteNonQuery(SqlConfigConent sqlConfigConent)
+        public static int ExecuteNonQuery(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
             try
             {
-                connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
                 return SqlMapper.Execute(
-                            connection, 
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters, 
-                            commandTimeout: sqlConfigConent.Timeout, 
-                            commandType:sqlConfigConent.CmdType);
+                            connection,
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType);
             }
             finally
             {
@@ -41,20 +41,20 @@ namespace DataAccess.Main
         /// <summary>
         /// 返回单个值
         /// </summary>
-        public static T ExecuteScalar<T>(SqlConfigConent sqlConfigConent)
+        public static T ExecuteScalar<T>(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
             try
             {
-                connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
                 return SqlMapper.ExecuteScalar<T>(
                             connection,
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters,
-                            commandTimeout: sqlConfigConent.Timeout,
-                            commandType: sqlConfigConent.CmdType);
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType);
             }
             finally {
                 if (connection.State != ConnectionState.Closed)
@@ -62,20 +62,20 @@ namespace DataAccess.Main
             }
         }
 
-        public static T QuerySingle<T>(SqlConfigConent sqlConfigConent)
+        public static T QuerySingle<T>(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
             try
             {
-                connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
                 return SqlMapper.QuerySingle<T>(
                             connection,
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters,
-                            commandTimeout: sqlConfigConent.Timeout,
-                            commandType: sqlConfigConent.CmdType);
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType);
             }
             finally
             {
@@ -89,20 +89,20 @@ namespace DataAccess.Main
         /// 这个业务有很多的测试用例
         /// https://github.com/StackExchange/dapper-dot-net/blob/bffb0972a076734145d92959dabbe48422d12922/Dapper.Tests/Tests.cs
         /// </summary>
-        public static T Query<T>(SqlConfigConent sqlConfigConent)
+        public static T Query<T>(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
             try
             {
-                connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
                 return SqlMapper.QueryFirstOrDefault<T>(
                             connection,
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters,
-                            commandTimeout: sqlConfigConent.Timeout,
-                            commandType: sqlConfigConent.CmdType);
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType);
             }
             finally
             {
@@ -114,20 +114,20 @@ namespace DataAccess.Main
         /// <summary>
         /// 返回多条数据的List, 还可以返回(List<int>这种数据)
         /// </summary>
-        public static List<T> QueryList<T>(SqlConfigConent sqlConfigConent)
+        public static List<T> QueryList<T>(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
             try
             {
-                connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
                 return SqlMapper.Query<T>(
                             connection,
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters,
-                            commandTimeout: sqlConfigConent.Timeout,
-                            commandType: sqlConfigConent.CmdType).ToList();
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType).ToList();
             }
             finally
             {
@@ -139,17 +139,17 @@ namespace DataAccess.Main
         /// <summary>
         /// 多个返回实体, 这个方法没有关闭connection, 需要手动关闭connection
         /// </summary>
-        public static Dapper.SqlMapper.GridReader QueryMultiple(SqlConfigConent sqlConfigConent)
+        public static Dapper.SqlMapper.GridReader QueryMultiple(SqlConfigContent sqlConfigContent)
         {
-            var connection = GetConnection(sqlConfigConent.ConnectionStr, sqlConfigConent.DbProvider);
+            var connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
             connection.Open();
 
             return SqlMapper.QueryMultiple(
                             connection,
-                            sqlConfigConent.SqlText,
-                            sqlConfigConent.dapperParameters,
-                            commandTimeout: sqlConfigConent.Timeout,
-                            commandType: sqlConfigConent.CmdType);
+                            sqlConfigContent.SqlText,
+                            sqlConfigContent.dapperParameters,
+                            commandTimeout: sqlConfigContent.Timeout,
+                            commandType: sqlConfigContent.CmdType);
         }
 
         /// <summary>

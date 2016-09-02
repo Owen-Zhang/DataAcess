@@ -6,6 +6,8 @@ using System.Data;
 using DataAccess.Common;
 using DataAccess.Model;
 using System;
+using System.Text;
+using DataAccess.Extenssion;
 
 namespace DataAccess.Main
 {
@@ -20,11 +22,11 @@ namespace DataAccess.Main
         private IDbConnection connection;
 
         private List<Parameter> configParemeterList;
-        private SqlConfigConent sqlConfigConent;
+        private SqlConfigContent sqlConfigContent;
 
         internal DataCommand(CommandContent config)
         {
-            sqlConfigConent = new SqlConfigConent() { dapperParameters = new DynamicParameters() };
+            sqlConfigContent = new SqlConfigContent() { dapperParameters = new DynamicParameters() };
             configParemeterList = GetParametersFromConfig(config);
             AddReturnOrOutPutParameter();
         }
@@ -39,7 +41,7 @@ namespace DataAccess.Main
                 string.Equals(item.Name, parameterName, System.StringComparison.OrdinalIgnoreCase));
 
             if (configTemp != null)
-                sqlConfigConent.dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
+                sqlConfigContent.dapperParameters.Add(configTemp.Name, value, configTemp.DbType, configTemp.Direction, configTemp.Size);
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace DataAccess.Main
         /// </summary>
         public void ReplaceSqlText(string oldString, string newString)
         {
-            sqlConfigConent.SqlText = sqlConfigConent.SqlText.Replace(oldString, newString);
+            sqlConfigContent.SqlText = sqlConfigContent.SqlText.Replace(oldString, newString);
         }
 
         /// <summary>
@@ -55,7 +57,14 @@ namespace DataAccess.Main
         /// </summary>
         public int ExecuteNonQuery()
         {
-            return DapperHelper.ExecuteNonQuery(sqlConfigConent);
+            try
+            {
+                return DapperHelper.ExecuteNonQuery(sqlConfigContent);
+            }
+            catch (Exception e)
+            {
+                throw ThrowDataAccessException(e);
+            }
         }
 
         /// <summary>
@@ -63,7 +72,14 @@ namespace DataAccess.Main
         /// </summary>
         public T ExecuteScalar<T>()
         {
-            return DapperHelper.ExecuteScalar<T>(sqlConfigConent);
+            try
+            {
+                return DapperHelper.ExecuteScalar<T>(sqlConfigContent);
+            }
+            catch (Exception e)
+            {
+                throw ThrowDataAccessException(e);
+            }
         }
 
         /// <summary>
@@ -71,7 +87,14 @@ namespace DataAccess.Main
         /// </summary>
         public T Query<T>()
         {
-            return DapperHelper.Query<T>(sqlConfigConent);
+            try
+            {
+                return DapperHelper.Query<T>(sqlConfigContent);
+            }
+            catch (Exception e)
+            {
+                throw ThrowDataAccessException(e);
+            }
         }
 
         /// <summary>
@@ -79,7 +102,14 @@ namespace DataAccess.Main
         /// </summary>
         public List<T> QueryList<T>()
         {
-            return DapperHelper.QueryList<T>(sqlConfigConent);
+            try
+            {
+                return DapperHelper.QueryList<T>(sqlConfigContent);
+            }
+            catch (Exception e)
+            {
+                throw ThrowDataAccessException(e);
+            }
         }
 
         /// <summary>
@@ -87,7 +117,14 @@ namespace DataAccess.Main
         /// </summary>
         public Dapper.SqlMapper.GridReader QueryMultiple()
         {
-            return DapperHelper.QueryMultiple(sqlConfigConent);
+            try
+            {
+                return DapperHelper.QueryMultiple(sqlConfigContent);
+            }
+            catch (Exception e)
+            {
+               throw ThrowDataAccessException(e);
+            }
         }
 
         /// <summary>
@@ -107,19 +144,20 @@ namespace DataAccess.Main
             configParemeterList.FindAll(item =>
                 item.Direction == System.Data.ParameterDirection.Output ||
                 item.Direction == System.Data.ParameterDirection.ReturnValue)
-            .ForEach(temp => sqlConfigConent.dapperParameters.Add(temp.Name, null, temp.DbType, temp.Direction, temp.Size));
+            .ForEach(temp => sqlConfigContent.dapperParameters.Add(temp.Name, null, temp.DbType, temp.Direction, temp.Size));
         }
 
         private List<Parameter> GetParametersFromConfig(CommandContent commandConfig)
         {
-            sqlConfigConent.CmdType = commandConfig.CommandType;
-            sqlConfigConent.SqlText = commandConfig.CommandText;
-            sqlConfigConent.Timeout = commandConfig.TimeOut;
+            sqlConfigContent.CmdType = commandConfig.CommandType;
+            sqlConfigContent.SqlText = commandConfig.CommandText;
+            sqlConfigContent.Timeout = commandConfig.TimeOut;
+            sqlConfigContent.ExceptionLevel = DataAccessConfig.ExceptionLevel;
 
             string connectionStr; DbProvider dbProvider;
             GetDataBaseInfo(commandConfig.DataBaseStr, out connectionStr, out dbProvider);
-            sqlConfigConent.ConnectionStr = connectionStr;
-            sqlConfigConent.DbProvider = dbProvider;
+            sqlConfigContent.ConnectionStr = connectionStr;
+            sqlConfigContent.DbProvider = dbProvider;
 
             if (commandConfig.Parameters == null || commandConfig.Parameters.Count == 0)
                 return new List<Parameter>();
@@ -147,10 +185,31 @@ namespace DataAccess.Main
         {
             var dataBase = ConfigFileManager.GetDataBaseInfo(dataBaseName);
             if (dataBase == null)
-                throw new Exception(string.Format("please config [{0}] dataBase ConnectionString ", dataBaseName));
+                throw new DataAccessException(
+                    string.Format("please config [{0}] dataBase ConnectionString ", dataBaseName));
 
             connectionStr = dataBase.ConnectionString;
             dbProvider = dataBase.Type;
+        }
+
+        private DataAccessException ThrowDataAccessException(Exception e)
+        { 
+            var errorMsg = new StringBuilder(e.Message);
+
+                if (sqlConfigContent.ExceptionLevel == Config.ExceptionLevel.Full)
+                    errorMsg.AppendFormat(
+                        "\n[ConnectionStr]:{0}",
+                        sqlConfigContent.ConnectionStr);
+
+                errorMsg.AppendFormat(
+                        "\n[SqlText]: {1}\n[Parameters]: {2}",
+                        sqlConfigContent.SqlText, configParemeterList.ToJson());
+
+                return new DataAccessException(
+                            errorMsg.ToString(),
+                            sqlConfigContent.ConnectionStr,
+                            sqlConfigContent.SqlText,
+                            configParemeterList.ToJson());
         }
     }
 }

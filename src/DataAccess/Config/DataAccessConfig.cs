@@ -21,5 +21,13 @@ namespace DataAccess.Config
                 return accessSection.DataBaseFilePath;
             }
         }
+
+        public static ExceptionLevel ExceptionLevel
+        {
+            get
+            {
+                return accessSection.ExceptionLevel;
+            }
+        }
     }
 }

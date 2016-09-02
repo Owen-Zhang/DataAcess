@@ -1,9 +1,10 @@
 ﻿using System.Data;
 using Dapper;
 using DataAccess.Common;
+using DataAccess.Config;
 namespace DataAccess.Model
 {
-    public class SqlConfigConent
+    public class SqlConfigContent
     {
         public DynamicParameters dapperParameters { get; set; }
 
@@ -16,5 +17,7 @@ namespace DataAccess.Model
         public string ConnectionStr {get;set;}
 
         public DbProvider DbProvider { get; set; }
+
+        public ExceptionLevel ExceptionLevel { get; set; }
     }
 }
