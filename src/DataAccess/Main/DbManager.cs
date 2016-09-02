@@ -6,7 +6,6 @@ namespace DataAccess.Main
 {
     /// <summary>
     /// 1： 异常处理
-    /// 3:  IDbConnection对象缓存
     /// </summary>
     public class DbManager
     {
