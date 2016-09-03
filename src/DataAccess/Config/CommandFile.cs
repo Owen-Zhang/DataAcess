@@ -23,6 +23,7 @@ namespace DataAccess.Config
         [XmlAttribute("DataBase")]
         public string DataBaseStr { get; set; }
 
+        
         [XmlAttribute("CommandType")]
         public CommandType CommandType
         {
@@ -69,6 +70,7 @@ namespace DataAccess.Config
     public class Parameter
     {
         private ParameterDirection direction = ParameterDirection.Input;
+        private int? size = null;
 
         [XmlAttribute("Name")]
         public string Name { get; set; }
@@ -90,7 +92,22 @@ namespace DataAccess.Config
         }
 
         [XmlAttribute("Size")]
-        public int? Size { get; set; }
+        public string SizeStr { get; set; }
+
+        public int? Size
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(SizeStr))
+                {
+                    int sizeResult;
+                    if (int.TryParse(SizeStr, out sizeResult))
+                        return sizeResult;
+                }
+                return null;
+            }
+            set { size = value; }
+        }
     }
 }
 

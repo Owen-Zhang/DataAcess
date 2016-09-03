@@ -101,11 +101,12 @@ namespace DataAccess.Config
                 return;
             }
 
+            var sqlFolderPath = Path.GetDirectoryName(sqlCommandPath);
             foreach (var item in sqlFile.SqlFileList)
             {
                 if (string.IsNullOrWhiteSpace(item.Name)) continue;
 
-                fileContent = File.ReadAllText(UtilTool.GetFilePath(item.Name));
+                fileContent = File.ReadAllText(UtilTool.GetFilePath(item.Name, sqlFolderPath));
                 if (string.IsNullOrWhiteSpace(fileContent))
                     continue;
 
@@ -114,9 +115,9 @@ namespace DataAccess.Config
                 {
                     commandList.AddRange(UtilTool.XmlDeserialize<CommandFile>(fileContent).CommandList);
                 }
-                catch
+                catch(Exception e)
                 {
-                    LogManager.Log.ErrorFormat("sqlFile Deserialize faild, fileName is : {0}", item.Name);
+                    LogManager.Log.ErrorFormat("sqlFile Deserialize faild, fileName is : {0}, ErrorMsg: {1}", item.Name, e.Message);
                 }
 
                 commandList.ForEach(command => sqlCommandDic[command.SqlName] = command);

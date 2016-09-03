@@ -21,11 +21,12 @@ namespace DataAccess.Config
             }
         }
 
+        [ConfigurationProperty("ExceptionLevel", IsRequired =false)]
         public ExceptionLevel ExceptionLevel {
             get
             {
                 ExceptionLevel temp;
-                if (Enum.TryParse(this["ExceptionLevel"] as string, out temp))
+                if (Enum.TryParse(this["ExceptionLevel"].ToString(), out temp))
                     return temp;
                 else return ExceptionLevel.Full;
             }

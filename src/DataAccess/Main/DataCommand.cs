@@ -45,6 +45,17 @@ namespace DataAccess.Main
         }
 
         /// <summary>
+        /// 获取输出参数的值
+        /// </summary>
+        public T GetParameterValue<T>(string parameter)
+        {
+            if (string.IsNullOrWhiteSpace(parameter))
+                return default(T);
+
+            return sqlConfigContent.dapperParameters.Get<T>(parameter);
+        }
+
+        /// <summary>
         /// 动态替换sql文本中的一些字符，如order by 字段名
         /// </summary>
         public void ReplaceSqlText(string oldString, string newString)

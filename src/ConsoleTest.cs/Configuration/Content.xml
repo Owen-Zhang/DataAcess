@@ -1,0 +1,39 @@
+﻿<CommandFile>
+  <CommandList>
+    <Command Name="GetSellerInfo" DataBase="QueryDB" CommandType="Text">
+      <CommandText>
+        <![CDATA[
+        SELECT TOP 10 SellerId FROM dbo.EDI_Seller_BasicInfo WHERE SellerId <> @SellerId ORDER BY selleriD desc
+      ]]>
+      </CommandText>
+      <Parameters>
+        <Parameter Name="@SellerId" DbType="StringFixedLength" Size="6" />
+      </Parameters>
+    </Command>
+
+    <Command Name="GetSellerInfo2" DataBase="QueryDB" CommandType="Text">
+      <CommandText>
+        <![CDATA[
+        SELECT TOP 10 SellerId, SellerName FROM dbo.EDI_Seller_BasicInfo WHERE SellerId <> @SellerId ORDER BY selleriD desc
+        
+        SELECT SellerId, SellerName FROM dbo.EDI_Seller_BasicInfo WHERE SellerId = @SellerId
+      ]]>
+      </CommandText>
+      <Parameters>
+        <Parameter Name="@SellerId" DbType="StringFixedLength" Size="6" />
+      </Parameters>
+    </Command>
+    
+    <Command Name="UpateSellerInfo" DataBase="MKTPLS" CommandType="Text">
+      <CommandText>
+        <![CDATA[
+        update dbo.EDI_Seller_BasicInfo set SellerName = @SellerName where SellerId = @SellerId
+      ]]>
+      </CommandText>
+      <Parameters>
+        <Parameter Name="@SellerId" DbType="StringFixedLength" Size="6" />
+        <Parameter Name="@SellerName" DbType="StringFixedLength" Size="40" />
+      </Parameters>
+    </Command>
+  </CommandList>
+</CommandFile>

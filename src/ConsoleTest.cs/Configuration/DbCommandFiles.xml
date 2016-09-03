@@ -1,0 +1,5 @@
+﻿<CommandFile>
+  <SqlFileList>
+    <File Name="Content.xml" />
+  </SqlFileList>
+</CommandFile>
