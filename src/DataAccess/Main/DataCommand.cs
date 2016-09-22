@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using DataAccess;
 using System.Linq;
 using DataAccess.Config;
 using System.Collections.Generic;
@@ -8,8 +8,9 @@ using DataAccess.Model;
 using System;
 using System.Text;
 using DataAccess.Extenssion;
+using DataAccess.Main;
 
-namespace DataAccess.Main
+namespace DataAccess
 {
     /// <summary>
     /// 如果找不到那个配制的sql 调用方请抛出错误
@@ -126,7 +127,7 @@ namespace DataAccess.Main
         /// <summary>
         /// 一次返回多个数据集，如(select * from a, select * from B.....)
         /// </summary>
-        public Dapper.SqlMapper.GridReader QueryMultiple()
+        public GridReader QueryMultiple()
         {
             try
             {
@@ -213,7 +214,7 @@ namespace DataAccess.Main
                         sqlConfigContent.ConnectionStr);
 
                 errorMsg.AppendFormat(
-                        "\n[SqlText]: {1}\n[Parameters]: {2}",
+                        "\n[SqlText]: {0}\n[Parameters]: {1}",
                         sqlConfigContent.SqlText, configParemeterList.ToJson());
 
                 return new DataAccessException(

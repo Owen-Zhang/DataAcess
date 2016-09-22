@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleTest.cs.Model;
-using DataAccess.Main;
+using DataAccess;
 
 namespace ConsoleTest.cs
 {
@@ -21,22 +21,21 @@ namespace ConsoleTest.cs
             //command.ExecuteNonQuery();
             var result = command.QueryList<string>();
             
-            /*
-            var command = DbManager.GetDataCommand("GetSellerInfo2");
-            command.SetParameterValue("@SellerId", "xxx");
+            
+            var command2 = DbManager.GetDataCommand("GetSellerInfo2");
+            command2.SetParameterValue("@SellerId", "A002");
 
-            try
+            using (var gridRead = command2.QueryMultiple())
             {
-                var gridRead = command.QueryMultiple();
                 var first = gridRead.Read<SellerInfo>();
                 var second = gridRead.Read<SellerInfo>();
+                var i = 1;
             }
-            catch (Exception e)
-            {
-            }
-            finally {
-                command.CloseConnection();
-            }*/
+
+            var coommand3 = DbManager.GetDataCommand("UpateSellerInfo");
+            coommand3.SetParameterValue("@SellerId", "A002");
+            coommand3.SetParameterValue("@SellerName", "A002 Test agin");
+            coommand3.ExecuteNonQuery();
                
             Console.ReadLine();
         }

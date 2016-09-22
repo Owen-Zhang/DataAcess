@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace DataAccess.Main
+namespace DataAccess
 {
     /// <summary>
     /// 1： 异常处理

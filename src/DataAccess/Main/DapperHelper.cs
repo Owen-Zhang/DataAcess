@@ -1,5 +1,5 @@
 ﻿using System;
-using Dapper;
+using DataAccess;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
@@ -62,6 +62,7 @@ namespace DataAccess.Main
             }
         }
 
+        /* 暂时不用
         public static T QuerySingle<T>(SqlConfigContent sqlConfigContent)
         {
             IDbConnection connection = null;
@@ -82,7 +83,7 @@ namespace DataAccess.Main
                 if (connection.State != ConnectionState.Closed)
                     connection.Close();
             }
-        }
+        }*/ 
 
         /// <summary>
         /// 返回单个实体数据
@@ -97,12 +98,16 @@ namespace DataAccess.Main
                 connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
                 connection.Open();
 
-                return SqlMapper.QueryFirstOrDefault<T>(
+                var result = SqlMapper.Query<T>(
                             connection,
                             sqlConfigContent.SqlText,
                             sqlConfigContent.dapperParameters,
                             commandTimeout: sqlConfigContent.Timeout,
                             commandType: sqlConfigContent.CmdType);
+                if (result == null || result.Count() == 0)
+                    return default(T);
+                else
+                    return result.FirstOrDefault();
             }
             finally
             {
@@ -139,17 +144,28 @@ namespace DataAccess.Main
         /// <summary>
         /// 多个返回实体, 这个方法没有关闭connection, 需要手动关闭connection
         /// </summary>
-        public static Dapper.SqlMapper.GridReader QueryMultiple(SqlConfigContent sqlConfigContent)
+        public static GridReader QueryMultiple(SqlConfigContent sqlConfigContent)
         {
-            var connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
-            connection.Open();
+            IDbConnection connection = null;
+            try
+            {
 
-            return SqlMapper.QueryMultiple(
-                            connection,
-                            sqlConfigContent.SqlText,
-                            sqlConfigContent.dapperParameters,
-                            commandTimeout: sqlConfigContent.Timeout,
-                            commandType: sqlConfigContent.CmdType);
+                connection = GetConnection(sqlConfigContent.ConnectionStr, sqlConfigContent.DbProvider);
+                connection.Open();
+
+                return SqlMapper.QueryMultiple(
+                                connection,
+                                sqlConfigContent.SqlText,
+                                sqlConfigContent.dapperParameters,
+                                commandTimeout: sqlConfigContent.Timeout,
+                                commandType: sqlConfigContent.CmdType);
+            }
+            catch (Exception e)
+            {
+                if (connection != null)
+                    connection.Close();
+                throw e;
+            }
         }
 
         /// <summary>

@@ -11,15 +11,17 @@
     <AssemblyName>DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,11 +30,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Text.4.5.0\lib\net45\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
@@ -59,12 +59,21 @@
     <Compile Include="Config\ConfigFileManager.cs" />
     <Compile Include="Config\Dictionary.cs" />
     <Compile Include="Config\SqlFIleListInfo.cs" />
+    <Compile Include="Dapper\CommandDefinitionStruct.cs" />
+    <Compile Include="Dapper\CommandFlagEnum.cs" />
+    <Compile Include="Dapper\DataTableHandler.cs" />
+    <Compile Include="Dapper\DynamicParameters.cs" />
+    <Compile Include="Dapper\GridReader.cs" />
+    <Compile Include="Dapper\Handler.cs" />
+    <Compile Include="Dapper\Identity.cs" />
+    <Compile Include="Dapper\Interface.cs" />
+    <Compile Include="Dapper\Settings.cs" />
+    <Compile Include="Dapper\SqlMapper.cs" />
     <Compile Include="Extenssion\objectExtention.cs" />
     <Compile Include="Main\DapperHelper.cs" />
     <Compile Include="Main\DataCommand.cs" />
     <Compile Include="Main\DbManager.cs" />
     <Compile Include="Main\TestDapper.cs" />
-    <Compile Include="Extenssion\MultipleReader.cs" />
     <Compile Include="Model\SqlConfigConent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

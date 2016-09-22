@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Dapper;
+using DataAccess;
 using DataAccess.Common;
 using DataAccess.Config;
 namespace DataAccess.Model
