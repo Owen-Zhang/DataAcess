@@ -2,6 +2,7 @@
 {
     public enum DbProvider
     {
-        SqlServer
+        SqlServer,
+        MySql
     }
 }

@@ -6,5 +6,8 @@
     <DataBase Name="QueryDB" Type="SqlServer">
       <ConnectionString>data source=S1DSQL04\EHISSQL;database=MKTPLS;user id=EDIDbo;password=4ediuse0nly;Timeout=30;connection lifetime=300; min pool size=2; max pool size=50</ConnectionString>
     </DataBase>
+    <DataBase Name="TestMySql" Type="MySql">
+      <ConnectionString>Server=localhost;Database=scheduler;Uid=root;Pwd=123456;</ConnectionString>
+    </DataBase>
   </DataBaseList>
 </CommandFile>

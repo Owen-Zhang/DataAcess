@@ -15,7 +15,7 @@ namespace ConsoleTest.cs
             Console.WriteLine("start");
             DbManager.LoadDataAccessConfig();
 
-            
+            /*
             var command = DbManager.GetDataCommand("GetSellerInfo");
             command.SetParameterValue("@SellerId", "A002");
             //command.ExecuteNonQuery();
@@ -36,7 +36,15 @@ namespace ConsoleTest.cs
             coommand3.SetParameterValue("@SellerId", "A002");
             coommand3.SetParameterValue("@SellerName", "A002 Test agin");
             coommand3.ExecuteNonQuery();
-               
+              */
+
+            var command = DbManager.GetDataCommand("GetMySqlSechedulerInfo");
+            var mySqlResult = command.QueryList<MySqlSechedulerInfo>();
+
+            var command2 = DbManager.GetDataCommand("GetMySqlSechedulerInfoByPid");
+            command2.SetParameterValue("@Pid", 7688);
+            var mySqlWhereResult = command2.QueryList<MySqlSechedulerInfo>();
+
             Console.ReadLine();
         }
     }

@@ -10,6 +10,8 @@ namespace DataAccess.Common
         {
             if (dbProvider == DbProvider.SqlServer)
                 return new SqlConnection(connectionStr);
+            else if (dbProvider == DbProvider.MySql)
+                return new MySql.Data.MySqlClient.MySqlConnection(connectionStr);
             else
                 return new OleDbConnection(connectionStr);
         }

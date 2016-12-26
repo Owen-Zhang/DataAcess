@@ -90,8 +90,7 @@ namespace DataAccess.Config
                 LogManager.Log.Error("DbCommandFiles is Empty");
                 return;
             }
-
-            SqlFIleListInfo sqlFile = null;
+SqlFIleListInfo sqlFile = null;
             try
             {
                 sqlFile = UtilTool.XmlDeserialize<SqlFIleListInfo>(fileContent);
@@ -106,7 +105,14 @@ namespace DataAccess.Config
             {
                 if (string.IsNullOrWhiteSpace(item.Name)) continue;
 
-                fileContent = File.ReadAllText(UtilTool.GetFilePath(item.Name, sqlFolderPath));
+                var realPath = UtilTool.GetFilePath(item.Name, sqlFolderPath);
+                if (string.IsNullOrWhiteSpace(realPath) || !File.Exists(realPath))
+                {
+                    LogManager.Log.ErrorFormat("File:[{0}] not exists,please check", realPath);
+                    continue;
+                }
+                fileContent = File.ReadAllText(realPath);
+            
                 if (string.IsNullOrWhiteSpace(fileContent))
                     continue;
 

@@ -1,5 +1,6 @@
 ﻿<CommandFile>
   <SqlFileList>
     <File Name="Content.xml" />
+    <File Name="MySqlContent.xml" />
   </SqlFileList>
 </CommandFile>
