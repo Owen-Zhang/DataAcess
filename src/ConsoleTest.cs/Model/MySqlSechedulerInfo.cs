@@ -17,5 +17,7 @@ namespace ConsoleTest.cs.Model
         public int ExitCode {get;set;}
 
         public int Pid {get;set;}
+
+        public byte[] Log { get; set; }
     }
 }

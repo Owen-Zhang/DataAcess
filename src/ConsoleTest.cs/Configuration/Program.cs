@@ -42,8 +42,9 @@ namespace ConsoleTest.cs
             var mySqlResult = command.QueryList<MySqlSechedulerInfo>();
 
             var command2 = DbManager.GetDataCommand("GetMySqlSechedulerInfoByPid");
-            command2.SetParameterValue("@Pid", 7688);
-            var mySqlWhereResult = command2.QueryList<MySqlSechedulerInfo>();
+            command2.SetParameterValue("@Pid", 3412);
+            var mySqlWhereResult = command2.Query<MySqlSechedulerInfo>();
+            Console.WriteLine(System.Text.Encoding.GetEncoding("GB2312").GetString(mySqlWhereResult.Log));
 
             Console.ReadLine();
         }
